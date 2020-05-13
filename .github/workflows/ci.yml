@@ -28,4 +28,30 @@ jobs:
     - name: Integration Tests
       env:
         CI: true
-      run: yarn test --host 127.0.0.1 --launch ${{ matrix.browser }}
+      run: yarn test:ember --host 127.0.0.1 --launch ${{ matrix.browser }}
+  build-macos:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [
+          'safari'
+        ]
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+    - name: Install dependencies
+      run: yarn install
+    - name: ESLint
+      run: yarn lint:js
+    - name: 'TemplateLint'
+      run: yarn lint:hbs
+    - name: Integration Tests
+      env:
+        CI: true
+      run: yarn test:ember --host 127.0.0.1 --launch ${{ matrix.browser }}
